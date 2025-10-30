@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfriSkana | Sign In / Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables (from your dashboard style) for consistency */
+    :root {
+      --color-primary-dark: #0d1a26;
+      --color-blue: #007bff;
+      --color-sky: #38bdf8;
+      --color-gray-900: #111827;
+      --color-gray-600: #4b5563;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      /* Dark background matching the landing page hero section */
+      background-color: var(--color-primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .auth-modal {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      position: relative;
+    }
+
+    .logo-area {
+      font-size: 1.875rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    .afri-text {
+      color: var(--color-gray-900);
+    }
+
+    .skana-text {
+      color: var(--color-blue);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: none;
+      background: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--color-gray-600);
+      line-height: 1;
+      transition: 0.2s;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      color: var(--color-blue);
+      transform: scale(1.1);
+    }
+
+    h2 {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-gray-900);
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.75rem;
+      /* CTA Gradient matching landing page button */
+      background: linear-gradient(to right, #2563eb, var(--color-sky));
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background: linear-gradient(to right, #1d4ed8, #0ea5e9);
+      transform: translateY(-1px);
+    }
+
+    #toggle-text {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 1rem;
+    }
+
+    #toggle-text a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #toggle-text a:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: #dc2626; /* Tailwind red-600 */
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      min-height: 1rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-modal">
+    <div class="logo-area">
+      <span class="afri-text">Afri</span><span class="skana-text">Skana</span>
+    </div>
+
+    <button class="close-btn" onclick="window.location.href = 'index.html'">&times;</button>
+
+    <h2 id="form-title">Sign In to AfriSkana</h2>
+
+    <form id="auth-form">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit" id="submit-btn">Sign In</button>
+    </form>
+
+    <p id="toggle-text">
+      Don't have an account?
+      <a href="#" id="toggle-link">Sign Up</a>
+    </p>
+
+    <p class="error-message" id="error-message"></p>
+  </div>
+
+  <script type="module">
+    const form = document.getElementById("auth-form");
+    const toggleLink = document.getElementById("toggle-link");
+    const formTitle = document.getElementById("form-title");
+    const submitBtn = document.getElementById("submit-btn");
+    const errorMsg = document.getElementById("error-message");
+    const toggleText = document.getElementById("toggle-text");
+    
+    // 🎯 CORRECTED: Target the dashboard.html file
+    const DASHBOARD_FILE = "dashboard.html"; 
+
+    let isSignUp = false;
+
+    // --- Logic for toggling between Sign In and Sign Up ---
+    toggleText.addEventListener("click", (e) => {
+      if (e.target.id === "toggle-link") {
+        e.preventDefault();
+        isSignUp = !isSignUp;
+
+        if (isSignUp) {
+          formTitle.textContent = "Create Your AfriSkana Account";
+          submitBtn.textContent = "Sign Up";
+          toggleText.innerHTML = `Already have an account? <a href="#" id="toggle-link">Sign In</a>`;
+        } else {
+          formTitle.textContent = "Sign In to AfriSkana";
+          submitBtn.textContent = "Sign In";
+          toggleText.innerHTML = `Don't have an account? <a href="#" id="toggle-link">Sign Up</a>`;
+        }
+        errorMsg.textContent = "";
+      }
+    });
+
+    // --- Logic for handling form submission and redirection ---
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // In a real application, you would make an API call here.
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        // Simulating a successful backend authentication/creation process
+        
+        // Show success alert
+        if (isSignUp) {
+          alert(`✅ Account created for ${email}! Redirecting to dashboard...`);
+        } else {
+          alert(`👋 Welcome back, signing in as ${email}. Redirecting...`);
+        }
+        
+        // Final mandatory step: Redirect to the correct dashboard file
+        window.location.href = DASHBOARD_FILE;
+        
+      } catch (error) {
+        // Simulating a backend error message
+        errorMsg.textContent = "Authentication failed. Please check your credentials.";
+        console.error("Auth Demo Error:", error);
+      }
+    });
+  </script>
+</body>
+</html>
