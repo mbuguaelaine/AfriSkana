@@ -25,6 +25,10 @@ function validateIP(ip) {
   return ipPattern.test(ip);
 }
 
+// ---
+// --- 
+// --- THIS IS THE PRIMARY UPDATED FUNCTION ---
+// ---
 // Scan form submission
 document.getElementById('scan-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -54,9 +58,40 @@ document.getElementById('scan-form').addEventListener('submit', function(e) {
   button.disabled = true;
   button.innerHTML = '<span>Scanning Network</span><div class="spinner"></div>';
 
-  // Simulate scan process (Replace with actual API call to your Python backend)
-  setTimeout(() => {
-    currentScanResults = generateMockResults(ip, mode);
+  // --- 
+  // --- REAL API CALL (Replaces Mock Data) ---
+  // --- 
+  console.log(`Sending scan request to backend: IP=${ip}, Mode=${mode}`);
+  
+  fetch('http://127.0.0.1:5000/api/scan', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      target_ip: ip,
+      mode: mode,
+    }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      // If server returns an error (4xx, 5xx), get the JSON error message
+      return response.json().then(err => {
+        throw new Error(err.error || `Server responded with status ${response.status}`);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    // ---
+    // --- DATA MAPPING: Convert Backend JSON to Frontend JSON ---
+    // ---
+    console.log("Received data from backend:", data);
+
+    // This function maps the Python output to the format your JS expects
+    const frontendResults = mapBackendToFrontend(data);
+    
+    currentScanResults = frontendResults;
     displayResults(currentScanResults);
 
     button.disabled = false;
@@ -64,57 +99,82 @@ document.getElementById('scan-form').addEventListener('submit', function(e) {
     
     resultsSection.classList.add('show');
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 4000);
+  })
+  .catch(error => {
+    // Handle network errors or errors thrown from the response
+    console.error('Scan failed:', error);
+    
+    // Display a comprehensive error on the dashboard
+    const errorResult = generateErrorResult(ip, mode, error.message);
+    currentScanResults = errorResult;
+    displayResults(currentScanResults);
+
+    button.disabled = false;
+    button.innerHTML = '<span>Launch Scan</span>';
+    
+    resultsSection.classList.add('show');
+    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 });
+// ---
+// --- END OF PRIMARY UPDATED FUNCTION ---
+// ---
 
-// Generate mock scan results
-function generateMockResults(ip, mode) {
-  const vulnerabilities = [
-    {
-      port: 23,
-      service: 'Telnet',
-      risk: 'critical',
-      title: 'Unencrypted Remote Access Protocol Detected',
-      description: 'Telnet transmits all data including passwords in plain text, making it vulnerable to eavesdropping and man-in-the-middle attacks.',
-      remediation: 'Disable Telnet immediately and replace with SSH (port 22) for secure encrypted remote access. Update firewall rules to block port 23.'
-    },
-    {
-      port: 21,
-      service: 'FTP',
-      risk: 'high',
-      title: 'Insecure File Transfer Protocol Active',
-      description: 'FTP lacks encryption and sends credentials in clear text. Common target for credential theft and data interception.',
-      remediation: 'Migrate to SFTP (SSH File Transfer Protocol) or FTPS (FTP over SSL/TLS). Ensure all file transfers use encrypted channels.'
-    },
-    {
-      port: 445,
-      service: 'SMB',
-      risk: 'medium',
-      title: 'SMB File Sharing Exposed',
-      description: 'Server Message Block protocol detected. If running outdated version (SMBv1), vulnerable to WannaCry-style ransomware attacks.',
-      remediation: 'Disable SMBv1, enable SMBv3 with encryption. Restrict SMB access to internal networks only using firewall rules.'
-    },
-    {
-      port: 80,
-      service: 'HTTP',
-      risk: 'low',
-      title: 'Unencrypted Web Traffic',
-      description: 'HTTP server detected without SSL/TLS encryption. Data transmitted can be intercepted.',
-      remediation: 'Implement HTTPS with valid SSL/TLS certificates. Redirect all HTTP traffic to HTTPS on port 443.'
-    }
-  ];
+/**
+ * M-A-P-P-E-R Function:
+ * Converts the JSON from `Security_Scanner.py` (`recommendations`)
+ * into the JSON format expected by `dashboard.js` (`vulnerabilities`).
+ */
+function mapBackendToFrontend(backendData) {
+  // Map risk levels to the CSS classes
+  const riskMap = {
+    'Critical': 'critical',
+    'Warning': 'high', // 'high' is used in your CSS
+    'Informational': 'low' // 'low' is used in your CSS
+  };
 
-  // Privacy mode only shows first 2 vulnerabilities
-  const modeVulns = mode === 'privacy' ? vulnerabilities.slice(0, 2) : vulnerabilities;
+  const vulnerabilities = backendData.recommendations.map(vuln => {
+    return {
+      port: vuln.port,
+      service: vuln.service,
+      risk: riskMap[vuln.risk_level] || 'low', // Default to 'low' if unknown
+      title: `${vuln.service} Service Detected (Port ${vuln.port})`,
+      description: `Version ${vuln.detected_version || 'unknown'} detected. ${vuln.recommendation.startsWith('LIVE') ? 'A specific vulnerability was found.' : ''}`,
+      remediation: vuln.recommendation
+    };
+  });
 
   return {
-    targetIp: ip,
-    scanMode: mode === 'standard' ? 'Standard Mode (Full Audit)' : 'Privacy Mode (Essential Ports)',
-    scanTime: new Date().toLocaleString(),
-    openPorts: modeVulns.length,
-    vulnerabilities: modeVulns
+    targetIp: backendData.target,
+    scanMode: document.getElementById('scan-mode').options[document.getElementById('scan-mode').selectedIndex].text,
+    scanTime: new Date(backendData.timestamp * 1000).toLocaleString(),
+    openPorts: backendData.ports.length,
+    vulnerabilities: vulnerabilities
   };
 }
+
+/**
+ * Generates a formatted error object to be displayed in the results panel.
+ */
+function generateErrorResult(ip, mode, errorMessage) {
+  return {
+    targetIp: ip,
+    scanMode: `${mode} (SCAN FAILED)`,
+    scanTime: new Date().toLocaleString(),
+    openPorts: 0,
+    vulnerabilities: [
+      {
+        port: 'N/A',
+        service: 'Scan Error',
+        risk: 'critical',
+        title: 'Backend Scan Failed',
+        description: `Could not retrieve scan results from the backend. ${errorMessage}`,
+        remediation: '1. Ensure the Python server is running (sudo python3 -m flask run --host=0.0.0.0). 2. Check the Python server console for errors (e.g., Nmap permissions, API key). 3. Verify your browser can access http://127.0.0.1:5000.'
+      }
+    ]
+  };
+}
+
 
 // Display scan results
 function displayResults(results) {
@@ -178,7 +238,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     reportText += `${index + 1}. ${vuln.title}\n`;
     reportText += `   Port: ${vuln.port} (${vuln.service})\n`;
     reportText += `   Risk Level: ${vuln.risk.toUpperCase()}\n\n`;
-    reportText += `   Description:\n   ${vuln.description}\n\n`;
+    // Use the raw remediation data for the text report
     reportText += `   Remediation:\n   ${vuln.remediation}\n\n`;
     reportText += `${'-'.repeat(50)}\n\n`;
   });
@@ -213,8 +273,9 @@ document.getElementById('logout-btn').addEventListener('click', function() {
   if (confirm('Are you sure you want to logout?')) {
     // Clear any session data
     currentScanResults = null;
-    alert('Logged out successfully! Redirecting to login page...');
-    // In a real application, redirect to auth page:
-    // window.location.href = 'auth.html';
+    alert('Logged out successfully! Redirecting to landing page...');
+    // Redirect to index.html
+    window.location.href = 'index.html';
   }
 });
+
