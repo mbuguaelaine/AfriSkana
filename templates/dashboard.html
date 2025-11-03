@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AfriSkana | Security Dashboard</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <link rel="stylesheet" href="css/dashboard.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -117,7 +117,7 @@
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
-                Download Report
+                Download PDF Report
               </button>
               <button class="clear-btn" id="clear-btn">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,29 +235,79 @@
       <div class="page-section" id="settings-page">
         <div class="header">
           <h2>Settings</h2>
-          <p>Customize your experience</p>
+          <p>Customize your AfriSkana experience</p>
         </div>
 
         <div class="content-card">
-          <h3>Account Settings</h3>
-          <h4>Profile Information</h4>
-          <p>Email: user@hospital.com</p>
-          <p>Account Type: Standard User</p>
+          <h3>Account Information</h3>
+          <div class="settings-group">
+            <div class="setting-item">
+              <label class="setting-label">Email Address</label>
+              <p class="setting-value" id="current-email">user@hospital.com</p>
+            </div>
+            <div class="setting-item">
+              <label class="setting-label">Account Type</label>
+              <p class="setting-value">Standard User</p>
+            </div>
+          </div>
+
+          <h4 class="mt-4">Appearance</h4>
+          <div class="settings-group">
+            <div class="setting-item toggle-setting">
+              <div class="setting-info">
+                <label class="setting-label">Dark Mode</label>
+                <p class="setting-description">Enable dark theme for reduced eye strain</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="dark-mode-toggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
 
           <h4>Scan Preferences</h4>
-          <p>Default Scan Mode: Standard</p>
-          <p>Auto-clear results: Enabled</p>
+          <div class="settings-group">
+            <div class="setting-item">
+              <label class="setting-label" for="default-scan-mode">Default Scan Mode</label>
+              <select id="default-scan-mode" class="setting-select">
+                <option value="standard">Standard Mode (Full Audit)</option>
+                <option value="privacy">Privacy Mode (Essential Ports)</option>
+              </select>
+            </div>
+            
+            <div class="setting-item toggle-setting">
+              <div class="setting-info">
+                <label class="setting-label">Auto-clear Results</label>
+                <p class="setting-description">Automatically clear IP address after viewing results</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="auto-clear-toggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
 
-          <h4>Notifications</h4>
-          <p>Email alerts: Disabled</p>
-          <p>Browser notifications: Disabled</p>
-
-          <p style="margin-top: 2rem; color: var(--color-gray-500); font-size: 0.875rem;">Settings are coming soon. Full customization options will be available in the next update.</p>
+          <h4>Actions</h4>
+          <div class="settings-group">
+            <button class="settings-action-btn secondary" id="reset-settings-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Reset Settings to Default
+            </button>
+            
+            <button class="settings-action-btn danger" id="settings-logout-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
-  <script src="/static/js/dashboard.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>

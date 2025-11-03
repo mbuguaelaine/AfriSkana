@@ -6,7 +6,6 @@
   <title>AfriSkana | Sign In / Sign Up</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* CSS Variables (from your dashboard style) for consistency */
     :root {
       --color-primary-dark: #0d1a26;
       --color-blue: #007bff;
@@ -17,7 +16,6 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      /* Dark background matching the landing page hero section */
       background-color: var(--color-primary-dark);
       display: flex;
       align-items: center;
@@ -102,7 +100,6 @@
     button[type="submit"] {
       width: 100%;
       padding: 0.75rem;
-      /* CTA Gradient matching landing page button */
       background: linear-gradient(to right, #2563eb, var(--color-sky));
       border: none;
       border-radius: 0.5rem;
@@ -135,7 +132,7 @@
     }
 
     .error-message {
-      color: #dc2626; /* Tailwind red-600 */
+      color: #dc2626;
       font-size: 0.9rem;
       margin-top: 0.5rem;
       min-height: 1rem;
@@ -175,12 +172,11 @@
     const errorMsg = document.getElementById("error-message");
     const toggleText = document.getElementById("toggle-text");
     
-    // 🎯 CORRECTED: Target the dashboard.html file
     const DASHBOARD_FILE = "dashboard.html"; 
 
     let isSignUp = false;
 
-    // --- Logic for toggling between Sign In and Sign Up ---
+    // Toggle between Sign In and Sign Up
     toggleText.addEventListener("click", (e) => {
       if (e.target.id === "toggle-link") {
         e.preventDefault();
@@ -199,16 +195,16 @@
       }
     });
 
-    // --- Logic for handling form submission and redirection ---
+    // Handle form submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       
-      // In a real application, you would make an API call here.
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
       try {
-        // Simulating a successful backend authentication/creation process
+        // Store email in localStorage for dashboard display
+        localStorage.setItem('userEmail', email);
         
         // Show success alert
         if (isSignUp) {
@@ -217,11 +213,10 @@
           alert(`👋 Welcome back, signing in as ${email}. Redirecting...`);
         }
         
-        // Final mandatory step: Redirect to the correct dashboard file
+        // Redirect to dashboard
         window.location.href = DASHBOARD_FILE;
         
       } catch (error) {
-        // Simulating a backend error message
         errorMsg.textContent = "Authentication failed. Please check your credentials.";
         console.error("Auth Demo Error:", error);
       }
