@@ -1,6 +1,10 @@
 # Python virtual environment
 venv/
 env/
+ $ cat .gitignore# Python virtual environment
+venv/
+env/
+venv_Afriskana/
 
 # Python cache
 __pycache__/

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS 
 from Security_Scanner import PortScanner, RecommendationEngine
 import json
@@ -21,7 +21,9 @@ except Exception as e:
     scanner = None
     engine = None
 
-
+@app.route('/')
+def home():
+    return render_template('dashboard.html')
 
 @app.route('/api/scan', methods=['POST'])
 def scan_network():
