@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AfriSkana | Security Dashboard</title>
-  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -98,8 +98,8 @@
             <div class="input-group">
               <label for="scan-mode">Scan Mode *</label>
               <select id="scan-mode" required>
-                <option value="standard">Standard Mode (Full Audit - All Ports)</option>
-                <option value="privacy">Privacy Mode (Essential Ports Only)</option>
+                <option value="standard">Standard Mode (Full Audit)</option>
+                <option value="privacy">Privacy Scan</option>
               </select>
             </div>
 
@@ -308,6 +308,6 @@
     </main>
   </div>
 
-  <script src="js/dashboard.js"></script>
+  <script src="/static/js/dashboard.js"></script>
 </body>
 </html>

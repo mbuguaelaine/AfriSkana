@@ -50,12 +50,13 @@ class PortScanner:
 
         
         if mode == 'standard':
-            arguments = '-sS -sV -sC -A -T4'
-        elif mode == 'privacy':
-            arguments = '-sS --top-ports 100 -T2 --max-retries 1'
+            arguments = '-sS -sV -sC -T4'
+        elif mode == 'privacy': 
+            arguments = '-sT --top-ports 1000 -T4 --version-light'
+
         else:
             print(f"[!] Invalid scan mode '{mode}'. Using 'standard'.")
-            arguments = '-sS -sV -sC -A -T4'
+            arguments = '-sS -sV -sC -T4'
 
         
         if ports:

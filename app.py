@@ -3,7 +3,9 @@ from flask_cors import CORS
 from Security_Scanner import PortScanner, RecommendationEngine
 import json
 import time
+import logging
 
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -21,9 +23,27 @@ except Exception as e:
     scanner = None
     engine = None
 
+
 @app.route('/')
 def home():
+    return render_template('index.html')
+
+@app.route('/login')
+def login_page():
+    """Route for the signing page (auth.html)."""
+    return render_template('auth.html')
+
+
+@app.route('/dashboard')
+def dashboard_page():
+    
     return render_template('dashboard.html')
+
+@app.route('/logout')
+def logout():
+
+    return redirect('/')
+
 
 @app.route('/api/scan', methods=['POST'])
 def scan_network():
@@ -37,6 +57,7 @@ def scan_network():
         
         target_ip = data.get('target_ip')
         mode = data.get('scan_mode', 'standard') 
+        print(f"DEBUG: Mode received from frontend is: {mode}")
 
         if not target_ip:
             return jsonify({"error": "Missing 'target_ip' in request data"}), 400

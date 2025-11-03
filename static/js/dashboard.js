@@ -134,7 +134,7 @@ document.getElementById('scan-form').addEventListener('submit', function(e) {
 
   console.log(`Sending scan request to backend: IP=${ip}, Mode=${mode}`);
   
-  fetch('http://127.0.0.1:5000/api/scan', {
+  fetch('/api/scan', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -426,11 +426,24 @@ document.getElementById('clear-btn').addEventListener('click', function() {
 });
 
 // Logout Button
-document.getElementById('logout-btn').addEventListener('click', function() {
-  if (confirm('Are you sure you want to logout?')) {
-    currentScanResults = null;
-    localStorage.removeItem('userEmail');
-    alert('Logged out successfully! Redirecting to landing page...');
-    window.location.href = 'index.html';
-  }
+document.getElementById('settings-logout-btn').addEventListener('click', function() {
+    if (confirm('Are you sure you want to logout?')) {
+        fetch('/logout', {
+            method: 'GET', 
+        })
+        .then(() => {
+            currentScanResults = null;
+            localStorage.removeItem('userEmail');
+
+            alert('Logged out successfully! Redirecting to landing page...');
+            
+            window.location.href = '/'; 
+        })
+        .catch(error => {
+            console.error('Logout failed:', error);
+            window.location.href = '/';
+        });
+    }
 });
+
+  
