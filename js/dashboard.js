@@ -55,7 +55,7 @@ document.getElementById('scan-form').addEventListener('submit', function(e) {
    
   console.log(`Sending scan request to backend: IP=${ip}, Mode=${mode}`);
   
-  fetch('http://127.0.0.1:5000/api/scan', {
+  fetch('api/scan', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
