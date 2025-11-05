@@ -6,12 +6,14 @@
   <title>AfriSkana | Sign In / Sign Up</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ... (CSS styles remain the same as the final T&C version) ... */
     :root {
       --color-primary-dark: #0d1a26;
       --color-blue: #007bff;
       --color-sky: #38bdf8;
       --color-gray-900: #111827;
       --color-gray-600: #4b5563;
+      --color-gray-500: #6b7280;
     }
 
     body {
@@ -97,6 +99,64 @@
       border-color: #2563eb;
     }
 
+    /* Terms Container Styles */
+    .terms-container {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      height: 150px;
+      overflow-y: scroll;
+      margin-bottom: 1rem;
+      text-align: left;
+      font-size: 0.8rem;
+      color: var(--color-gray-600);
+    }
+
+    .terms-container h3 {
+      font-size: 1rem;
+      color: var(--color-gray-900);
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    
+    .terms-container p, .terms-container li {
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+    
+    .terms-container ul {
+        padding-left: 1.25rem;
+        list-style: disc;
+    }
+
+    .terms-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    
+    .terms-group input[type="checkbox"] {
+      width: auto; /* Override 100% width */
+      margin-right: 0.5rem;
+      pointer-events: none; /* Disable clicking until scroll complete */
+    }
+
+    .terms-group label {
+      font-size: 0.9rem;
+      color: var(--color-gray-600);
+      line-height: 1.2;
+    }
+
+    .terms-group label a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+
     button[type="submit"] {
       width: 100%;
       padding: 0.75rem;
@@ -150,9 +210,50 @@
 
     <h2 id="form-title">Sign In to AfriSkana</h2>
 
-    <form id="auth-form">
-      <input type="email" id="email" placeholder="Email" required />
+    <form id="auth-form" method="POST" action="https://formspree.io/f/xnnoenpl">
+      <input type="email" id="email" name="_replyto" placeholder="Email" required />
       <input type="password" id="password" placeholder="Password" required />
+      
+      <div class="terms-container" id="terms-container" style="display: none;">
+          <h3>Terms and Conditions</h3>
+          <p style="color: var(--color-gray-500);">Last Updated: November 2025</p>
+
+          <h3>1. Acceptance of Terms</h3>
+          <p>By creating an account with AfriSkana, you agree to these Terms and Conditions and our Privacy Policy.</p>
+          
+          <h3>2. Service Description</h3>
+          <p>AfriSkana provides network security scanning and vulnerability assessment tools for healthcare institutions and businesses.</p>
+          
+          <h3>3. User Responsibilities</h3>
+          <ul>
+            <li>You must only scan networks you own or have explicit permission to scan.</li>
+            <li>You are responsible for maintaining the confidentiality of your account.</li>
+            <li>You must not use the service for any illegal or unauthorized purpose.</li>
+            <li>You must not attempt to interfere with the proper functioning of the service.</li>
+          </ul>
+
+          <h3>4. Privacy and Data Protection</h3>
+          <p>We do not store scan results or network information. All data is processed in real-time and deleted immediately after your session ends.</p>
+          
+          <h3>5. Limitation of Liability</h3>
+          <p>AfriSkana is provided "as is" without warranties. We are not liable for any damages arising from the use of our service.</p>
+          
+          <h3>6. Account Termination</h3>
+          <p>We reserve the right to terminate accounts that violate these terms or engage in malicious activity.</p>
+          
+          <h3>7. Changes to Terms</h3>
+          <p>We may update these terms at any time. Continued use of the service constitutes acceptance of updated terms.</p>
+
+          <p style="margin-top: 1rem;">For questions, contact: support@afriskana.com</p>
+      </div>
+      
+      <div class="terms-group" id="terms-group" style="display: none;">
+        <input type="checkbox" id="terms-accept" name="Terms Accepted" value="Yes">
+        <label for="terms-accept">I have read and agree to the Terms & Conditions</label>
+      </div>
+
+      <input type="hidden" name="Subject" value="New AfriSkana User Signed Up" id="form-subject">
+
       <button type="submit" id="submit-btn">Sign In</button>
     </form>
 
@@ -171,25 +272,62 @@
     const submitBtn = document.getElementById("submit-btn");
     const errorMsg = document.getElementById("error-message");
     const toggleText = document.getElementById("toggle-text");
+    const formspreeEndpoint = "https://formspree.io/f/xnnoenpl"; // Make sure to update this!
+    
+    // Get the terms elements
+    const termsContainer = document.getElementById("terms-container");
+    const termsGroup = document.getElementById("terms-group");
+    const termsCheckbox = document.getElementById("terms-accept");
     
     const DASHBOARD_FILE = "/dashboard"; 
-
+    const SIGNIN_ACTION = null; // Use null for sign-in demo
+    
     let isSignUp = false;
+    let termsScrolled = false;
+
+    // Attach scroll listener to terms container
+    termsContainer.addEventListener('scroll', function() {
+      if (!termsScrolled && (termsContainer.scrollTop + termsContainer.clientHeight >= termsContainer.scrollHeight - 5)) {
+        termsScrolled = true;
+        termsCheckbox.style.pointerEvents = 'auto'; // Enable the checkbox
+        // Optional: Provide visual feedback that the checkbox is now enabled
+        termsGroup.querySelector('label').style.color = 'var(--color-gray-900)';
+      }
+    });
 
     // Toggle between Sign In and Sign Up
     toggleText.addEventListener("click", (e) => {
       if (e.target.id === "toggle-link") {
         e.preventDefault();
         isSignUp = !isSignUp;
+        
+        // Reset terms state
+        termsScrolled = false;
+        termsCheckbox.checked = false;
+        termsCheckbox.style.pointerEvents = 'none'; // Lock checkbox
+        termsContainer.scrollTop = 0; // Scroll to top of terms content
+        termsGroup.querySelector('label').style.color = 'var(--color-gray-600)';
+
 
         if (isSignUp) {
           formTitle.textContent = "Create Your AfriSkana Account";
           submitBtn.textContent = "Sign Up";
           toggleText.innerHTML = `Already have an account? <a href="#" id="toggle-link">Sign In</a>`;
+          // Show terms for sign up
+          termsContainer.style.display = 'block';
+          termsGroup.style.display = 'flex';
+          form.action = formspreeEndpoint; // Set action for Formspree
+          form.method = "POST";
+          
         } else {
           formTitle.textContent = "Sign In to AfriSkana";
           submitBtn.textContent = "Sign In";
           toggleText.innerHTML = `Don't have an account? <a href="#" id="toggle-link">Sign Up</a>`;
+          // Hide terms for sign in
+          termsContainer.style.display = 'none';
+          termsGroup.style.display = 'none';
+          form.action = SIGNIN_ACTION; // Clear action for sign-in demo
+          form.method = "GET"; // Reset method for sign-in demo
         }
         errorMsg.textContent = "";
       }
@@ -200,26 +338,64 @@
       e.preventDefault();
       
       const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+      
+      errorMsg.textContent = ""; // Clear previous errors
 
-      try {
-        // Store email in localStorage for dashboard display
-        localStorage.setItem('userEmail', email);
+      if (isSignUp) {
+        // Sign Up Flow (Client-Side Validation + Formspree Post)
         
-        // Show success alert
-        if (isSignUp) {
-          alert(`✅ Account created for ${email}! Redirecting to dashboard...`);
-        } else {
-          alert(`👋 Welcome back, signing in as ${email}. Redirecting...`);
+        // 1. Check if user scrolled
+        if (!termsScrolled) {
+            errorMsg.textContent = "Please scroll to the bottom of the Terms & Conditions to enable acceptance.";
+            return;
         }
         
-        // Redirect to dashboard
-        window.location.href = DASHBOARD_FILE;
-        
-      } catch (error) {
-        errorMsg.textContent = "Authentication failed. Please check your credentials.";
-        console.error("Auth Demo Error:", error);
+        // 2. Check if box is checked
+        if (!termsCheckbox.checked) {
+          errorMsg.textContent = "You must accept the Terms & Conditions to create an account.";
+          return; // Stop form submission
+        }
+
+        // 3. Post to Formspree (using fetch for seamless transition)
+        const formData = new FormData(form);
+        submitBtn.textContent = "Sending Notification...";
+        submitBtn.disabled = true;
+
+        try {
+            // Formspree requires a fetch post using formData
+            const response = await fetch(formspreeEndpoint, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Formspree email sent successfully (to admin)
+                alert(`✅ Account created for ${email}! Admin notified via Formspree. Redirecting to dashboard...`);
+            } else {
+                // Formspree failed (e.g., rate limit, bad endpoint)
+                const data = await response.json();
+                console.error("Formspree Error:", data);
+                alert(`⚠️ Warning: Account created, but notification failed (Formspree Error). Redirecting.`);
+            }
+        } catch (error) {
+            console.error("Formspree Fetch Failed:", error);
+            alert(`⚠️ Warning: Account created, but network error prevented notification. Redirecting.`);
+        } finally {
+            submitBtn.textContent = "Sign Up";
+            submitBtn.disabled = false;
+        }
+
+      } else {
+        // Sign In Demo Logic
+        alert(`👋 Welcome back, signing in as ${email}. Redirecting...`);
       }
+
+      // Final action for both Sign In and Sign Up (Demo)
+      localStorage.setItem('userEmail', email);
+      window.location.href = DASHBOARD_FILE;
     });
   </script>
 </body>
