@@ -21,18 +21,18 @@ The tool utilises National Vulnerability database to provide information about t
 The tool only works on debian based operating system. Therefore it can be used in linux environments.<br>
 To install AfriSkana:<br>
 1. Clone the AfriSkana repository<br>
-   <git clone https://github.com/mbuguaelaine/AfriSkana.git><br>
+   <code>git clone https://github.com/mbuguaelaine/AfriSkana.git</code><br>
 2. Install nmap if it's not installed<br>
-    <nmap --version # Verfiy if nmap install> <br>
-    <sudo apt update && sudo apt install nmap> <br>
+    <code>nmap --version # Verfiy if nmap install</code> <br>
+    <code>sudo apt update && sudo apt install nmap</code> <br>
 3. Create a python environment - This helps to install and use the tools libraries without affecting the operating system configurations <br>
-    <python -m venv venv_AfriSkana> <br>
+    <code>python -m venv venv_AfriSkana</code> <br>
 4. Activate the virtual environment <br>
-    <source venv_Afriskana/bin/activate> <br>
+    <code>source venv_Afriskana/bin/activate</code> <br>
 5. Install the tool's dependencies. The dependencies are list in the requirement.txt <br>
-    <python install -r requirements.txt> <br>
+    <code>python install -r requirements.txt</code> <br>
 6. Run the app.py to start the tool <br>
-    <sudo ./venv_AfriSkana/bin/python app.py> <br>
+    <code>sudo ./venv_AfriSkana/bin/python app.py</code> <br>
 7. Type the home address on the browser, if you have installed the tool on your local machine i.e 127.0.0.1 <br>
 
 # 🛠 How it works <br>
