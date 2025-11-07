@@ -31,23 +31,28 @@ To install AfriSkana:<br>
    ```bash
    sudo apt update && sudo apt install nmap
    ```
-4. Create a python environment - This helps to install and use the tools libraries without affecting the operating system configurations. <br>
+4. Move to the AfriSkana directory created after cloning the repository.
+   ```bash
+   cd AfriSkana
+   ```
+5. Create a python environment - This helps to install and use the tools libraries without affecting the operating system configurations. <br>
     ```bash
     python -m venv venv_AfriSkana
     ```
-5. Activate the virtual environment. <br>
+   
+6. Activate the virtual environment. <br>
     ```bash
-    source venv_Afriskana/bin/activate
+    source venv_AfriSkana/bin/activate
     ```
-6. Install the tool's dependencies. The dependencies are list in the requirement.txt <br>
+7. Install the tool's dependencies. The dependencies are list in the requirement.txt <br>
     ```bash
-    python install -r requirements.txt
+    pip install -r requirements.txt
     ```
-7. Run the app.py to start the tool. <br>
+8. Run the app.py to start the tool. <br>
     ```bash
     sudo ./venv_AfriSkana/bin/python app.py
     ```
-8. Type the home address on the browser, if you have installed the tool on your local machine i.e 127.0.0.1 <br>
+9. Type the home address on the browser, if you have installed the tool on your local machine i.e 127.0.0.1 <br>
 
 # 🛠 How it works <br>
 On the web dashboard, a user inputs the device’s IP address intended for scanning, and chooses between full standard or privacy scan mode. After pressing the scan button, the front-end logic (dashboard.js) sends the inputs to the backend.
