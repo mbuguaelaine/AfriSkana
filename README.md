@@ -1,5 +1,5 @@
 # 🔍AfriSkana🔍
-## 🚨Helping hospitals monitor and identify vulnerable services running on their systems virtual oports.
+## 🚨Helping hospitals monitor and identify vulnerable services running on their system's virtual network ports.
 
 AfriSkana is a web-based port scanning tool that prevents threat actors from accessing hospital networks through scanning open virtual ports on a hospital network and providing recommendation on vulnerable services running on the port.
 The tool utilises National Vulnerability database to provide information about the vulnerable service on discovered ports with a device.
