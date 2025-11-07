@@ -1,5 +1,5 @@
 # 🔍AfriSkana🔍
-Helping hospitals monitor and identify vulnerable services running on their systems virtual oports.
+## 🚨Helping hospitals monitor and identify vulnerable services running on their systems virtual oports.
 
 AfriSkana is a web-based port scanning tool that prevents threat actors from accessing hospital networks through scanning open virtual ports on a hospital network and providing recommendation on vulnerable services running on the port.
 The tool utilises National Vulnerability database to provide information about the vulnerable service on discovered ports with a device.
@@ -20,22 +20,22 @@ The tool utilises National Vulnerability database to provide information about t
 # 💻Installation
 The tool only works on debian based operating system. Therefore it can be used in linux environments.<br>
 To install AfriSkana:<br>
-1. Clone the AfriSkana repository<br>
+1. Clone the AfriSkana repository. <br>
    ```bash
    git clone https://github.com/mbuguaelaine/AfriSkana.git
    ```
-3. Install nmap if it's not installed<br>
+3. Install nmap if it's not installed. <br>
    ```bash
    nmap --version # Verfiy if nmap install
    ```
    ```bash
    sudo apt update && sudo apt install nmap
    ```
-4. Create a python environment - This helps to install and use the tools libraries without affecting the operating system configurations <br>
+4. Create a python environment - This helps to install and use the tools libraries without affecting the operating system configurations. <br>
     ```bash
     python -m venv venv_AfriSkana
     ```
-5. Activate the virtual environment <br>
+5. Activate the virtual environment. <br>
     ```bash
     source venv_Afriskana/bin/activate
     ```
@@ -43,7 +43,7 @@ To install AfriSkana:<br>
     ```bash
     python install -r requirements.txt
     ```
-7. Run the app.py to start the tool <br>
+7. Run the app.py to start the tool. <br>
     ```bash
     sudo ./venv_AfriSkana/bin/python app.py
     ```
@@ -58,7 +58,7 @@ The flask server accepts the input and validates the scan mode as it forwards it
 If there’s no vulnerability found on the NVD, the risk mapper dictionary comes to play. The dictionary maps a default recommendation prompting the user to restrict access by placing the port behind the firewall, verify if the service is required, or update/patch the software. Ensuring the tool returns an output and gives an accurate recommendation.
 
 # 📄 Usage
-1. Install AfriSkana dependencies as instructed on the installation section
+1. Install AfriSkana dependencies as instructed on the installation section.
 2. Use the your web browser to access the dashboard, using the 127.0.0.1 address.
 3. sign up and set up an account.
 4. Finally set the IP address you wish to scan and specify the scan mode.
@@ -66,4 +66,4 @@ If there’s no vulnerability found on the NVD, the risk mapper dictionary comes
 __This is strictly for networks you have permission to scan__
 
 # 📘 Documentation
-For more information about the tool including the problem its solving, research and solution idea. Please visit the AfriSkana Documentation
+For more information about the tool including the problem its solving, research and solution idea. Please visit the AfriSkana Documentation.
