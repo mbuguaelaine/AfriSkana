@@ -21,7 +21,7 @@ The tool utilises National Vulnerability database to provide information about t
 The tool only works on debian based operating system. Therefore it can be used in linux environments.<br>
 To install AfriSkana:<br>
 1. Clone the AfriSkana repository<br>
-   ``git clone https://github.com/mbuguaelaine/AfriSkana.git`` <br>
+   <bash> git clone https://github.com/mbuguaelaine/AfriSkana.git</basH> <br>
 2. Install nmap if it's not installed<br>
     <code>nmap --version # Verfiy if nmap install</code> <br>
     <code>sudo apt update && sudo apt install nmap</code> <br>
